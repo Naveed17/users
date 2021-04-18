@@ -8,7 +8,7 @@ import Loading from '../components/Loading'
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import AlertDialog from '../components/Dialog';
 
-export default function Home() {
+function Home() {
     const [state, setstate] = React.useState({
         data:null,
         sort:true,
@@ -21,7 +21,7 @@ React.useEffect( () => {
    users('/users').then(res => setstate({...state,data:res.sort((a,b) => {if (a.name < b.name)return -1;if (a.name > b.name)return 1;return 0;}),loading:false}))
 }, [])
 
-const sortOrder = ()=>{
+const sortOrder = React.useCallback( ()=>{
 if(state.sort){
    const result =  state.data.sort((a,b) => {
     if (a.name > b.name)
@@ -32,7 +32,7 @@ return 0;
       
    })
    setstate({...state,data:result,sort:false});
-   console.log(result)
+   
 }else{
     const result =  state.data.sort((a,b) => {
         if (a.name < b.name)
@@ -44,19 +44,20 @@ return 0;
        })
        setstate({...state,data:result,sort:true});
 }
-};
-const handleDialog = ()=>{
+}
+);
+const handleDialog = React.useCallback(()=>{
     setstate({...state,dialogOpen:true})
 }
-
-const userDataHandel = v => setstate({...state,data:[...state.data,v].sort((a,b) => {
-    if (a.name > b.name)
+)
+const userDataHandel  = React.useCallback( v => setstate({...state,data:[...state.data,v].sort((a,b) => {
+    if (a.name < b.name)
     return -1;
-if (a.name < b.name)
+if (a.name > b.name)
     return 1;
 return 0;
       
-   }),dialogOpen:false})
+   }),dialogOpen:false}))
 
     return (
         <div>
@@ -87,3 +88,4 @@ return 0;
         </div>
     )
 }
+export default React.memo(Home)

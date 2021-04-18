@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Grid, TextField } from '@material-ui/core';
 
-export default function AlertDialog({open,userdata}) {
+ function AlertDialog({open,userdata}) {
  
   const [state, setstate] = React.useState({
         "id":null,
@@ -33,17 +33,16 @@ export default function AlertDialog({open,userdata}) {
     
   });
   
-  const onChangeHandle = (props)=>(e)=>{
+  const onChangeHandle = React.useCallback( (props)=>(e)=>{
       if(props === 'address' || props === 'company'){
         setstate({...state,[props]:{...state[props],[e.target.name]:e.target.value}})
       }else{
      setstate({...state,[e.target.name]:e.target.name ==='id' ? +e.target.value :e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)})
       }
-  }
-  const handleClose = () =>  { 
-    userdata(state)}
+  });
+  const handleClose = React.useCallback( () =>  { 
+    userdata(state)})
 
-    console.log(state)
   return (
     <div>
       
@@ -91,3 +90,4 @@ export default function AlertDialog({open,userdata}) {
     </div>
   );
 }
+export default React.memo(AlertDialog)
